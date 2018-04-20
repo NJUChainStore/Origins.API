@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Origins.Models;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,6 @@ namespace Origins.API.Models
 {
     public class ApplicationContext : IdentityDbContext<UserModel, UserRole, string>
     {
-
+        public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options) { }
     }
 }

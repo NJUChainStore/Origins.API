@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -16,7 +17,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
-using Origins.API.Configs;
+using Origins.API.Auth;
 using Origins.API.Models;
 using Origins.Models;
 using Swashbuckle.AspNetCore.Swagger;
@@ -28,6 +29,7 @@ namespace Origins.API
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+
         }
 
         public IConfiguration Configuration { get; }
@@ -63,12 +65,13 @@ namespace Origins.API
                         Type = "apiKey"
                     });
             });
-            JwtConfig.Initialize(Configuration);
-            //DataInitializer.RootPassword = Configuration["RootPassword"];
+            
+            services.Configure<JwtConfig>(Configuration.GetSection("Jwt"));
+            services.AddSingleton<AuthService>();
 
             services.AddDbContext<ApplicationContext>(options =>
             {
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+                options.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
             });
 
             services.AddCors();
@@ -99,14 +102,15 @@ namespace Origins.API
                     config.SaveToken = true;
                     config.TokenValidationParameters = new TokenValidationParameters
                     {
-                        ValidIssuer = JwtConfig.Config.Issuer,
-                        ValidAudience = JwtConfig.Config.Issuer,
-                        IssuerSigningKey = JwtConfig.Config.KeyObject,
+                        ValidIssuer = Configuration["Jwt:Issuer"],
+                        ValidAudience = Configuration["Jwt:Issuer"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"])),
                         ClockSkew = TimeSpan.Zero, // remove delay of token when expire
                         NameClaimType = ClaimTypes.NameIdentifier,
                         RoleClaimType = ClaimTypes.Role
                     };
                 });
+
 
             services.AddMvc().AddJsonOptions(options =>
             {
