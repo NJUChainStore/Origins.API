@@ -15,8 +15,9 @@ namespace Origins.Models
 
     public class UserRole : IdentityRole
     {
-        public const string Admin = "Admin";
-        public const string User = "User";
+        public const string Admin = nameof(UserRole.Admin);
+        public const string Client = nameof(UserRole.Client);
+        public const string Producer = nameof(UserRole.Producer);
 
         public UserRole() { }
         public UserRole(string roleName) : base(roleName) { }
