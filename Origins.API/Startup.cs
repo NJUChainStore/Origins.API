@@ -18,6 +18,7 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using Origins.API.Auth;
+using Origins.API.DataServices;
 using Origins.API.Models;
 using Origins.Models;
 using Swashbuckle.AspNetCore.Swagger;
@@ -112,6 +113,8 @@ namespace Origins.API
                 });
 
 
+            services.AddTransient<IAccountDataService, AccountDataController>();
+
             services.AddMvc().AddJsonOptions(options =>
             {
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -133,6 +136,7 @@ namespace Origins.API
             app.UseAuthentication();
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "VicBlog API"));
+
 
             app.UseMvc();
         }

@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Origins.API.ViewModels
+namespace Origins.API.DataServices.Models
 {
-    public class QRScanParameters
+    public class ProductInfoCreateModel
     {
         public string ProductId { get; set; }
-        public string Location { get; set; }
+        public string ProductDetails { get; set; }
     }
 }

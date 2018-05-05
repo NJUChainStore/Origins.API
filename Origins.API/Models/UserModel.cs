@@ -11,6 +11,7 @@ namespace Origins.Models
 {
     public class UserModel : IdentityUser
     {
+        public DateTime RegisterTime { get; set; }    
     }
 
     public class UserRole : IdentityRole

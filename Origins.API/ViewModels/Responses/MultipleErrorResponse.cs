@@ -5,9 +5,8 @@ using System.Threading.Tasks;
 
 namespace Origins.API.ViewModels.Responses
 {
-    public class ErrorResponse
+    public class MultipleErrorResponse : ErrorResponse
     {
-        public string Code { get; set; }
-        public string Description { get; set; }
+        public IEnumerable<string> ErrorDescriptions { get; set; }
     }
 }
