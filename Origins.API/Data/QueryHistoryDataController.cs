@@ -11,5 +11,13 @@ namespace Origins.API.Data
     {
         public QueryHistoryDataController(ApplicationContext context)
     : base(context, context.QueryHistory) { }
+
+        public async Task AddAHistoryAsync(QueryHistoryModel incompleteModel)
+        {
+            incompleteModel.Id = Guid.NewGuid().ToString();
+            incompleteModel.Date = DateTime.UtcNow;
+            Add(incompleteModel);
+            await SaveChangesAsync();
+        }
     }
 }

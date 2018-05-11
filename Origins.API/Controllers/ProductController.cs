@@ -28,7 +28,8 @@ namespace Origins.API.Controllers
             await productDataService.AddInfo(new DataServices.Models.ProductInfoCreateModel()
             {
                 ProductId = info.ProductId,
-                ProductDetails = info.ProductDetails
+                ProductDetails = info.ProductDetails,
+                Operator = HttpContext.User.Identity.Name
             });
             return Ok();
         }
@@ -67,11 +68,9 @@ namespace Origins.API.Controllers
         {
             var allDetails = productDataService.Raw
                 .Where(x => x.ProductId == productId);
-            foreach (var i in allDetails)
-            {
-                await productDataService.LoadDetail(i);
-            }
 
+            await Task.WhenAll(allDetails.Select(x => productDataService.LoadDetail(x)));
+ 
             return new ProductInfoQueryViewModel()
             {
                 ProductId = productId,
@@ -89,14 +88,12 @@ namespace Origins.API.Controllers
         [SwaggerResponse(200, type: typeof(ProductInfoQueryViewModel), description: "Query a product")]
         public async Task<IActionResult> Query([FromQuery]string productId)
         {
-            queryHistoryService.Add(new Models.QueryHistoryModel()
+            await queryHistoryService.AddAHistoryAsync(new Models.QueryHistoryModel()
             {
-                Id = Guid.NewGuid().ToString(),
                 Location = null,
                 ProductId = productId,
                 Username = HttpContext.User.Identity.IsAuthenticated ? HttpContext.User.Identity.Name : null
             });
-            queryHistoryService.SaveChangesAsync().ConfigureAwait(false);
             return Ok(await GetProductInfo(productId));
         }
          
@@ -105,14 +102,12 @@ namespace Origins.API.Controllers
         [SwaggerResponse(200, type: typeof(ProductInfoQueryViewModel), description: "Product Queried")]
         public async Task<IActionResult> QRCode([FromQuery]QRScanParameters parameters)
         {
-            queryHistoryService.Add(new Models.QueryHistoryModel()
+            await queryHistoryService.AddAHistoryAsync(new Models.QueryHistoryModel()
             {
-                Id = Guid.NewGuid().ToString(),
                 Location = parameters.Location,
                 ProductId = parameters.ProductId,
                 Username = HttpContext.User.Identity.IsAuthenticated ? HttpContext.User.Identity.Name : null
             });
-            queryHistoryService.SaveChangesAsync().ConfigureAwait(false);
             return Ok(await GetProductInfo(parameters.ProductId));
         }
         

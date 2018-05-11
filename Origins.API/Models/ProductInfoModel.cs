@@ -21,7 +21,7 @@ namespace Origins.API.Models
 
         public DateTime Date { get; set; }
        
-        public int BlockIndex { get; set; }
+        public long BlockIndex { get; set; }
         
         public int BlockOffset { get; set; }
 

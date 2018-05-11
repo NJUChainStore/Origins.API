@@ -15,5 +15,6 @@ namespace Origins.API.Models
         public string Location { get; set; }
         public string Username { get; set; }
         public string ProductId { get; set; }
+        public DateTime Date { get; set; }
     }
 }

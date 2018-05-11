@@ -11,6 +11,7 @@ namespace Origins.API.Models
     public class ApplicationContext : IdentityDbContext<UserModel, UserRole, string>
     {
         public DbSet<QueryHistoryModel> QueryHistory { get; set; }
+        public DbSet<ProductInfoModel> ProductInfo { get; set; }
 
         public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options) { }
     }

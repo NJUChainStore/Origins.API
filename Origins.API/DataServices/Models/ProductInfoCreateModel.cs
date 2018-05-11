@@ -9,5 +9,6 @@ namespace Origins.API.DataServices.Models
     {
         public string ProductId { get; set; }
         public string ProductDetails { get; set; }
+        public string Operator { get; set; }
     }
 }
