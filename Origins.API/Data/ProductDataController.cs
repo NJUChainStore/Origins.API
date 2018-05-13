@@ -41,6 +41,7 @@ namespace Origins.API.Data
                 Id = Guid.NewGuid().ToString(),
                 BlockIndex = res.BlockIndex,
                 BlockOffset = res.Offset,
+                Detail = config.UseMock ? model.ProductDetails : "",
                 Date = DateTime.UtcNow,
                 ProductId = model.ProductId,
                 Operator = model.Operator
@@ -53,6 +54,10 @@ namespace Origins.API.Data
 
         public async Task LoadDetail(ProductInfoModel model)
         {
+            if (config.UseMock)
+            {
+                return;
+            }
             var res = await storeService.FindInformationAsync(model.BlockIndex, model.BlockOffset, config.Token);
             model.Detail = res.Info;
         }

@@ -18,6 +18,7 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using Origins.API.Auth;
+using Origins.API.Data;
 using Origins.API.DataServices;
 using Origins.API.Models;
 using Origins.Models;
@@ -114,6 +115,9 @@ namespace Origins.API
 
 
             services.AddTransient<IAccountDataService, AccountDataController>();
+            services.AddTransient<IQueryHistoryDataService, QueryHistoryDataController>();
+            services.AddTransient<IProductDataService, ProductDataController>();
+
 
             services.AddMvc().AddJsonOptions(options =>
             {
@@ -125,7 +129,7 @@ namespace Origins.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ApplicationContext context)
         {
             if (env.IsDevelopment())
             {
@@ -139,6 +143,10 @@ namespace Origins.API
 
 
             app.UseMvc();
+
+
+            context.Database.EnsureCreated();
+
         }
 
 

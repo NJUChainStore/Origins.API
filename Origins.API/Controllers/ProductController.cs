@@ -19,6 +19,12 @@ namespace Origins.API.Controllers
         private readonly IQueryHistoryDataService queryHistoryService;
         private readonly IProductDataService productDataService;
 
+        public ProductController(IQueryHistoryDataService queryHistoryService, IProductDataService productDataService)
+        {
+            this.queryHistoryService = queryHistoryService;
+            this.productDataService = productDataService;
+        }
+
         [HttpPost]
         [Authorize]
         [SwaggerOperation]
@@ -88,6 +94,7 @@ namespace Origins.API.Controllers
         [SwaggerResponse(200, type: typeof(ProductInfoQueryViewModel), description: "Query a product")]
         public async Task<IActionResult> Query([FromQuery]string productId)
         {
+
             await queryHistoryService.AddAHistoryAsync(new Models.QueryHistoryModel()
             {
                 Location = null,
