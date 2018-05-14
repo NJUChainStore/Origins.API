@@ -53,6 +53,10 @@ namespace Origins.API
             if (result.Succeeded)
             {
                 var registeredUser = userManager.Users.SingleOrDefault(x => x.UserName == username);
+                if (!(await roleManager.RoleExistsAsync(roleName)))
+                {
+                    await roleManager.CreateAsync(new UserRole(roleName));
+                }
                 await userManager.AddToRoleAsync(registeredUser, roleName);
                 return new RegisterResult()
                 {

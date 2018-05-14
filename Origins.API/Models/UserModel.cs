@@ -20,6 +20,8 @@ namespace Origins.Models
         public const string Client = nameof(UserRole.Client);
         public const string Producer = nameof(UserRole.Producer);
 
+        public static IEnumerable<string> PredefinedRoles => new List<string>() { Admin, Client, Producer };
+
         public UserRole() { }
         public UserRole(string roleName) : base(roleName) { }
 

@@ -43,7 +43,7 @@ namespace Origins.API.DataServices
         /// <param name="password"></param>
         /// <param name="roleName"></param>
         /// <returns></returns>
-        Task<RegisterResult> RegisterAsync(string username, string password, string roleName = UserRole.Client);
+        Task<RegisterResult> RegisterAsync(string username, string password, string roleName);
 
         /// <summary>
         /// Gets a User with username

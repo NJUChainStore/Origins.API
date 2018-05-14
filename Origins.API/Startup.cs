@@ -117,6 +117,7 @@ namespace Origins.API
             services.AddTransient<IAccountDataService, AccountDataController>();
             services.AddTransient<IQueryHistoryDataService, QueryHistoryDataController>();
             services.AddTransient<IProductDataService, ProductDataController>();
+            services.AddTransient<DataInitializer, DataInitializer>();
 
 
             services.AddMvc().AddJsonOptions(options =>
@@ -129,7 +130,7 @@ namespace Origins.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ApplicationContext context)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, DataInitializer dataInitializer)
         {
             if (env.IsDevelopment())
             {
@@ -145,7 +146,7 @@ namespace Origins.API
             app.UseMvc();
 
 
-            context.Database.EnsureCreated();
+            dataInitializer.Initialize();
 
         }
 

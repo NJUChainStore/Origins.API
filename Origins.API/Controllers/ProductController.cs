@@ -49,12 +49,11 @@ namespace Origins.API.Controllers
             string username = HttpContext.User.Identity.Name;
             return Ok(new HistoryResponse()
             {
-                ProductShortList = from x in queryHistoryService.Raw
-                                   where x.Username == username
-                                   select new HistoryItemViewModel()
+                ProductShortList = queryHistoryService.Raw.Where(x => x.Username == username)
+                                   .Select(x => new HistoryItemViewModel()
                                    {
                                        ProductId = x.ProductId
-                                   }
+                                   })
             });
 
         }

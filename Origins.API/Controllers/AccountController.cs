@@ -66,7 +66,7 @@ namespace Origins.API.Controllers
             }
 
             var username = model.Username;
-            var result = await accountService.RegisterAsync(username, model.Password);
+            var result = await accountService.RegisterAsync(username, model.Password, model.Role);
 
             if (result.Succeeded)
             {
