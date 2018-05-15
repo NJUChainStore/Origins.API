@@ -14,6 +14,14 @@ namespace Origins.API.DataServices
         /// </summary>
         /// <param name="incompleteModel"></param>
         /// <returns></returns>
-        Task AddAHistoryAsync(QueryHistoryModel incompleteModel); 
+        Task AddHistoryAsync(QueryHistoryModel incompleteModel);
+
+        /// <summary>
+        /// Deletes query history of username and productId
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="productId"></param>
+        /// <returns></returns>
+        Task DeleteHistoryAsync(string username, string productId);
     }
 }

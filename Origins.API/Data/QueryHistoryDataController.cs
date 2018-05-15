@@ -12,12 +12,18 @@ namespace Origins.API.Data
         public QueryHistoryDataController(ApplicationContext context)
     : base(context, context.QueryHistory) { }
 
-        public async Task AddAHistoryAsync(QueryHistoryModel incompleteModel)
+        public Task AddHistoryAsync(QueryHistoryModel incompleteModel)
         {
             incompleteModel.Id = Guid.NewGuid().ToString();
             incompleteModel.Date = DateTime.UtcNow;
             Add(incompleteModel);
-            await SaveChangesAsync();
+            return Task.CompletedTask;
+        }
+
+        public async Task DeleteHistoryAsync(string username, string productId)
+        {
+            await RemoveWhereAsync(x => x.Username == username && x.ProductId == productId);
+
         }
     }
 }

@@ -26,7 +26,7 @@ namespace Origins.API.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = UserRole.Producer)]
         [SwaggerOperation]
         [SwaggerResponse(200, description: "Info saved successfully")]
         public async Task<IActionResult> Save([FromBody] ProductInfoCreateViewModel info)
@@ -61,45 +61,33 @@ namespace Origins.API.Controllers
         [HttpDelete("History")]
         [Authorize(Roles = UserRole.Client)]
         [SwaggerOperation]
-        [SwaggerResponse(200, description: "Delete query histories of productId")]
+        [SwaggerResponse(200, description: "Delete query history of productId")]
         public async Task<IActionResult> DeleteQueryHistory([FromQuery]string productId)
         {
             string username = HttpContext.User.Identity.Name;
-            await queryHistoryService.RemoveWhereAsync(x => x.Username == username);
+            await queryHistoryService.DeleteHistoryAsync(username, productId);
+            await queryHistoryService.SaveChangesAsync();
             return Ok();
-        }
-
-        private async Task<ProductInfoQueryViewModel> GetProductInfo(string productId)
-        {
-            var allDetails = productDataService.Raw
-                .Where(x => x.ProductId == productId);
-
-            await Task.WhenAll(allDetails.Select(x => productDataService.LoadDetail(x)));
- 
-            return new ProductInfoQueryViewModel()
-            {
-                ProductId = productId,
-                ProductDetails = allDetails.Select(x => new ProductInfoItem()
-                {
-                    Date = x.Date,
-                    Detail = x.Detail,
-                    Operator = x.Operator
-                })
-            };
         }
 
         [HttpGet]
         [SwaggerOperation]
-        [SwaggerResponse(200, type: typeof(ProductInfoQueryViewModel), description: "Query a product")]
+        [SwaggerResponse(200, type: typeof(ProductInfoQueryViewModel), description: "Product Queried. Returns the information of the product")]
         public async Task<IActionResult> Query([FromQuery]QRScanParameters parameters)
         {
-
-            await queryHistoryService.AddAHistoryAsync(new Models.QueryHistoryModel()
+            if (HttpContext.User.Identity.IsAuthenticated)
             {
-                Location = parameters.Location,
-                ProductId = parameters.ProductId,
-                Username = HttpContext.User.Identity.IsAuthenticated ? HttpContext.User.Identity.Name : null
-            });
+                string username = HttpContext.User.Identity.Name;
+                await queryHistoryService.DeleteHistoryAsync(username, parameters.ProductId);
+                await queryHistoryService.AddHistoryAsync(new Models.QueryHistoryModel()
+                {
+                    Location = parameters.Location,
+                    ProductId = parameters.ProductId,
+                    Username = username
+                });
+                await queryHistoryService.SaveChangesAsync();
+            }
+
 
             var allDetails = productDataService.Raw.Where(x => x.ProductId == parameters.ProductId);
 
@@ -116,7 +104,7 @@ namespace Origins.API.Controllers
                 })
             });
         }
-        
-        
+
+
     }
 }
