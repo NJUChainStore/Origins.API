@@ -30,17 +30,21 @@ namespace Origins.API.Data
 
         public async Task AddInfo(ProductInfoCreateModel model)
         {
-            var res = await storeService.AddInformationAsync(new AddInformationContent()
-            {
-                Token = config.Token,
-                Info = encryptor.Encrypt(model.ProductDetails)
-            });
+			AddInformationResponse response = null;
+			if (!config.UseMock) {
+				response = await storeService.AddInformationAsync(new AddInformationContent()
+                {
+                    Token = config.Token,
+                    Info = encryptor.Encrypt(model.ProductDetails)
+                });
+			}
+  
 
             var newInfo = new ProductInfoModel()
             {
                 Id = Guid.NewGuid().ToString(),
-                BlockIndex = res.BlockIndex,
-                BlockOffset = res.Offset,
+				BlockIndex = config.UseMock ? 0 : response.BlockIndex,
+				BlockOffset = config.UseMock ? 0 : response.Offset,
                 Detail = config.UseMock ? model.ProductDetails : "",
                 Date = DateTime.UtcNow,
                 ProductId = model.ProductId,

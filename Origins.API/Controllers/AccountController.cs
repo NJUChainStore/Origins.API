@@ -29,7 +29,7 @@ namespace Origins.API.Controllers
         [SwaggerOperation]
         [SwaggerResponse(200, type: typeof(LoginResponse), description: "Login successful. Returns token, username, registerTime and role.")]
         [SwaggerResponse(401, type: typeof(ErrorResponse), description: "Credential provided is not valid.")]
-        public async Task<IActionResult> Login([FromQuery]string username, [FromQuery] string password)
+		public async Task<IActionResult> Login([FromQuery]string username, [FromQuery] string password)
         {
             var result = await accountService.LoginAsync(username, password);
             if (result)
@@ -58,7 +58,7 @@ namespace Origins.API.Controllers
         [SwaggerOperation]
         [SwaggerResponse(201, type: typeof(LoginResponse), description: "Login successful. Returns token, username, registerTime and role.")]
         [SwaggerResponse(409, type: typeof(ErrorResponse), description: "Username already exists.")]
-        public async Task<IActionResult> Register([FromQuery]RegisterViewModel model)
+		public async Task<IActionResult> Register([FromBody]RegisterViewModel model)
         {
             if (!ModelState.IsValid)
             {

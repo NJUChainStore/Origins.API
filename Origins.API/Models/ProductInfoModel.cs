@@ -16,7 +16,7 @@ namespace Origins.API.Models
 
         public string Operator { get; set; }
 
-        [NotMapped]
+        //[NotMapped]
         public string Detail { get; set; }
 
         public DateTime Date { get; set; }

@@ -18,6 +18,7 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using Origins.API.Auth;
+using Origins.API.Configs;
 using Origins.API.Data;
 using Origins.API.DataServices;
 using Origins.API.Models;
@@ -69,6 +70,7 @@ namespace Origins.API
             });
             
             services.Configure<JwtConfig>(Configuration.GetSection("Jwt"));
+			services.Configure<ChainStoreConfig>(Configuration.GetSection("ChainStore"));
             services.AddSingleton<AuthService>();
 
             services.AddDbContext<ApplicationContext>(options =>
