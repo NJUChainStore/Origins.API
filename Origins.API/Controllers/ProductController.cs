@@ -91,31 +91,32 @@ namespace Origins.API.Controllers
         [HttpGet("")]
         [SwaggerOperation]
         [SwaggerResponse(200, type: typeof(ProductInfoQueryViewModel), description: "Query a product")]
-        public async Task<IActionResult> Query([FromQuery]string productId)
+        public async Task<IActionResult> Query([FromQuery]QRScanParameters parameters)
         {
 
-            await queryHistoryService.AddAHistoryAsync(new Models.QueryHistoryModel()
-            {
-                Location = null,
-                ProductId = productId,
-                Username = HttpContext.User.Identity.IsAuthenticated ? HttpContext.User.Identity.Name : null
-            });
-            return Ok(await GetProductInfo(productId));
-        }
-         
-        [HttpGet("QRCode")]
-        [SwaggerOperation]
-        [SwaggerResponse(200, type: typeof(ProductInfoQueryViewModel), description: "Product Queried")]
-        public async Task<IActionResult> QRCode([FromQuery]QRScanParameters parameters)
-        {
             await queryHistoryService.AddAHistoryAsync(new Models.QueryHistoryModel()
             {
                 Location = parameters.Location,
                 ProductId = parameters.ProductId,
                 Username = HttpContext.User.Identity.IsAuthenticated ? HttpContext.User.Identity.Name : null
             });
-            return Ok(await GetProductInfo(parameters.ProductId));
+
+            var allDetails = productDataService.Raw.Where(x => x.ProductId == parameters.ProductId);
+
+            await Task.WhenAll(allDetails.Select(x => productDataService.LoadDetail(x)));
+
+            return Ok(new ProductInfoQueryViewModel()
+            {
+                ProductId = parameters.ProductId,
+                ProductDetails = allDetails.Select(x => new ProductInfoItem()
+                {
+                    Date = x.Date,
+                    Detail = x.Detail,
+                    Operator = x.Operator
+                })
+            });
         }
+        
         
     }
 }
