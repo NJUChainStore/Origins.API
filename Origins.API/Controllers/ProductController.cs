@@ -40,7 +40,7 @@ namespace Origins.API.Controllers
             return Ok();
         }
 
-        [HttpGet("history")]
+        [HttpGet("History")]
         [Authorize(Roles = UserRole.Client)]
         [SwaggerOperation]
         [SwaggerResponse(200, type: typeof(HistoryResponse), description: "Gets query history of current user")]
@@ -58,10 +58,10 @@ namespace Origins.API.Controllers
 
         }
 
-        [HttpDelete]
-        [Authorize]
+        [HttpDelete("History")]
+        [Authorize(Roles = UserRole.Client)]
         [SwaggerOperation]
-        [SwaggerResponse(200, description: "Query history deleted")]
+        [SwaggerResponse(200, description: "Delete query histories of productId")]
         public async Task<IActionResult> DeleteQueryHistory([FromQuery]string productId)
         {
             string username = HttpContext.User.Identity.Name;
@@ -88,7 +88,7 @@ namespace Origins.API.Controllers
             };
         }
 
-        [HttpGet("")]
+        [HttpGet]
         [SwaggerOperation]
         [SwaggerResponse(200, type: typeof(ProductInfoQueryViewModel), description: "Query a product")]
         public async Task<IActionResult> Query([FromQuery]QRScanParameters parameters)
