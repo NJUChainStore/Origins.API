@@ -88,7 +88,7 @@ namespace Origins.API.Controllers
             };
         }
 
-        [HttpGet("/")]
+        [HttpGet("")]
         [SwaggerOperation]
         [SwaggerResponse(200, type: typeof(ProductInfoQueryViewModel), description: "Query a product")]
         public async Task<IActionResult> Query([FromQuery]string productId)
