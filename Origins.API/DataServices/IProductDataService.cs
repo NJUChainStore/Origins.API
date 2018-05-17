@@ -9,10 +9,8 @@ namespace Origins.API.DataServices
 {
     public interface IProductDataService
     {
-        Task LoadDetail(ProductInfoModel model);
+        Task<IEnumerable<ProductInfoModel>> FindProduct(string productId);
 
         Task AddInfo(ProductInfoCreateModel model);
-
-        IQueryable<ProductInfoModel> Raw { get; }
     }
 }

@@ -18,7 +18,8 @@ namespace Origins.API.Data.ChainStore
         public string Encrypt(string info)
         {
             byte[] bytes = System.Text.Encoding.Default.GetBytes(info);
-            return Convert.ToBase64String(bytes);
+            var base64 = Convert.ToBase64String(bytes);
+            return base64;
         }
 
         public string Decrypt(string encrypted)

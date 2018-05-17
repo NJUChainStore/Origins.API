@@ -26,8 +26,6 @@ namespace Origins.API.Data
             this.context = context;
         }
 
-        public IQueryable<ProductInfoModel> Raw => context.ProductInfo;
-
         public async Task AddInfo(ProductInfoCreateModel model)
         {
 			AddInformationResponse response = null;
@@ -56,14 +54,19 @@ namespace Origins.API.Data
             
         }
 
-        public async Task LoadDetail(ProductInfoModel model)
+        public async Task<IEnumerable<ProductInfoModel>> FindProduct(string productId)
         {
-            if (config.UseMock)
+            var items = context.ProductInfo.Where(x => x.ProductId == productId).ToList();
+            if (!config.UseMock)
             {
-                return;
+                foreach (var item in items)
+                {
+                    var res = await storeService.FindInformationAsync(item.BlockIndex, item.BlockOffset, config.Token);
+                    item.Detail = encryptor.Decrypt(res.Info);
+                }
             }
-            var res = await storeService.FindInformationAsync(model.BlockIndex, model.BlockOffset, config.Token);
-            model.Detail = res.Info;
+
+            return items;
         }
     }
 }

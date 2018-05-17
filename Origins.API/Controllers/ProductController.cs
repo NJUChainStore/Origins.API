@@ -89,9 +89,7 @@ namespace Origins.API.Controllers
             }
 
 
-            var allDetails = productDataService.Raw.Where(x => x.ProductId == parameters.ProductId);
-
-            await Task.WhenAll(allDetails.Select(x => productDataService.LoadDetail(x)));
+            var allDetails = await productDataService.FindProduct(parameters.ProductId);
 
             return Ok(new ProductInfoQueryViewModel()
             {
