@@ -260,6 +260,11 @@ paket-files/
 __pycache__/
 *.pyc
 
+# not ignore published
+
+!Published/**
+
 # database
 
 **/database.db
+
