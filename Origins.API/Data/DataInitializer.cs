@@ -34,7 +34,10 @@ namespace Origins.API.Data
             context.Database.EnsureCreated();
 
             // create admin roles if not already exists
-            Task.WhenAll(UserRole.PredefinedRoles.Select(InitializeRole)).Wait();
+            foreach (var role in UserRole.PredefinedRoles)
+            {
+                InitializeRole(role).Wait();
+            }
             
         }
     }
